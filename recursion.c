@@ -57,11 +57,13 @@ void read_dir(s_list **s1, s_list **names, DIR * FD,char * dirname)
 
 void find_dir(s_list *n, s_list **s1, s_list **names)
 {
-    if (*s1) {
+    if (*s1)
+    {
         (*s1)->next = n;
         *s1 = n;
     }
-    else {
+    else
+    {
         *names = n;
         *s1 = n;
     }

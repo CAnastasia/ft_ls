@@ -1,6 +1,6 @@
 #include "ft_ls.h"
 
-s_list *sorted_lists(s_list *first, s_list *second)
+s_list *sorted_lists(s_list *first, s_list *second, int(*compare)(s_list * first, s_list *second))
 {
     s_list *res = NULL;
 
@@ -8,15 +8,15 @@ s_list *sorted_lists(s_list *first, s_list *second)
         return (second);
     else if (second == NULL)
         return (first);
-    if (first->modif_time >= second->modif_time)
+    if (compare(first,second))
     {
         res = first;
-        res->next = sorted_lists(first->next, second);
+        res->next = sorted_lists(first->next, second,compare);
     }
     else
     {
         res = second;
-        res->next = sorted_lists(first, second->next);
+        res->next = sorted_lists(first, second->next,compare);
     }
     return (res);
 }
@@ -52,5 +52,5 @@ void merge_sort(s_list **list)
     front_back_split(tmp, &first, &second);
     merge_sort(&first);
     merge_sort(&second);
-    *list = sorted_lists(first, second);
+    *list = sorted_lists(first, second,compare_alphabetic_reverse);
 }

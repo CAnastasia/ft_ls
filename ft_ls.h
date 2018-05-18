@@ -25,13 +25,22 @@ typedef struct stat s_stat;
 
 typedef struct dirent d_dir;
 
+typedef struct opt_t
+{
+    int opt_a;
+    int opt_l;
+    int opt_r;
+    int opt_t;
+    int opt_R;
+
+}              s_opt;
+
 typedef struct slist_t
 {
-  char *name;
-  int is_dir;
-  struct slist_t *next;
-  time_t modif_time;
-
+    char *name;
+    int is_dir;
+    struct slist_t *next;
+    time_t modif_time;
 }              s_list;
 
 void read_dir(s_list **s1, s_list **names, DIR * FD, char * dirname);
@@ -43,8 +52,12 @@ void find_dir(s_list *n, s_list **s1, s_list **names);
 void get_time(s_list * list);
 s_list *put_in_list(char *filename, char ** new_root);
 void display_list(s_list *file_list);
-s_list *sorted_lists(s_list *first, s_list * second);
+s_list *sorted_lists(s_list *first, s_list *second, int(*compare)(s_list * first, s_list *second));
 void front_back_split(s_list *source, s_list **front,s_list **back);
 void merge_sort(s_list **list);
+int compare_time(s_list *first, s_list * second);
+int compare_time_reverse(s_list *first, s_list * second);
+int compare_alphabetic(s_list *first, s_list * second);
+int compare_alphabetic_reverse(s_list *first, s_list * second);
 
 #endif
