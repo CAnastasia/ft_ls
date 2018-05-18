@@ -30,8 +30,8 @@ int main(int argc, char **argv)
 {
   char * francais;
     int i = 1;
-    s_opt *opt = {0,0,0,0,0};
-    options(opt,argv);
+    s_opt opt = {.opt_a = 0,.opt_l = 0, .opt_R = 0, .opt_r = 0, .opt_t = 0};
+    options(&opt,argv);
  // char * test=argv[2];
     while (argv[i])
     {
