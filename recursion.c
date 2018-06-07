@@ -3,31 +3,67 @@
 void actions_dir (s_list *dir)
 {
     char fin ='\n';
-    char espace= ' ';
     write(0,dir->name,ft_strlen(dir->name));
-    write(0,&espace,1);
-    write(0,ctime(&(dir->modif_time)),ft_strlen(ctime(&(dir->modif_time))));
     write(0,&fin,1);
 }
-void action_dir_pre(const char *root, const char *dir)
+
+void function_total(char *root, s_list * s1)
 {
-    printf("%s%s:\n",root,dir);
+    s_stat st;
+    unsigned int size = 0;
+    char *new_root;
+    char *root_copy;
+    int i = ft_strlen(root);
+    char *tempo;
+
+    new_root = ft_strdup(root);
+    root_copy = ft_strjoin(new_root, "/");
+    ft_putstr("total ");
+    while(s1)
+    {
+        tempo=ft_strjoin(root_copy,s1->name);
+        stat(tempo,&st);
+        free(tempo);
+        size +=st.st_blocks/2;
+        s1 = s1->next;
+    }
+    free(new_root);
+    free(root_copy);
+    ft_putnbr(size);
+    ft_putchar('\n');
+
+}
+
+void action_dir_pre(char *root,s_list * s1)
+{
+    ft_putstr(root);
+    ft_putchar(':');
+    ft_putchar('\n');
+    function_total(root,s1);
 }
 void action_file(s_list *file)
 {
     char fin ='\n';
-    char espace= ' ';
     write(0,file->name,ft_strlen(file->name));
-    write(0,&espace,1);
-    write(0,ctime(&(file->modif_time)),ft_strlen(ctime(&(file->modif_time))));
     write(0,&fin,1);
 }
-
-void read_dir(s_list **s1, s_list **names, DIR * FD,char * dirname)
+void list_alloc(s_list **n, d_dir *f, s_stat st)
+{
+    if (NULL == ((*n) = malloc((sizeof **n))))
+        exit(EXIT_FAILURE);
+    (*n)->name = ft_strdup(f->d_name);
+    (*n)->modif_time=st.st_mtime;
+    if (S_ISDIR(st.st_mode) && !(S_ISLNK(st.st_mode)))
+        (*n)->is_dir = 1;
+    else
+        (*n)->is_dir = 0;
+    (*n)->next = NULL;
+}
+void read_dir(s_list **s1, s_list **names, s_opt options,char * dirname)
 {
     s_stat st;
     d_dir *f;
-    while ((f = readdir(FD)) != NULL) {
+    while ((f = readdir(options.fd)) != NULL) {
         s_list *n;
         char *new_dir;
         char *dir_2;
@@ -39,20 +75,12 @@ void read_dir(s_list **s1, s_list **names, DIR * FD,char * dirname)
             new_dir=ft_strjoin(new_dir,f->d_name);
             lstat(new_dir, &st);
             free(new_dir);
-            if (NULL == (n = malloc((sizeof *n))))
-                exit(EXIT_FAILURE);
-            n->name = ft_strdup(f->d_name);
-            n->modif_time=st.st_mtime;
-            if (S_ISDIR(st.st_mode) && !(S_ISLNK(st.st_mode)))
-                n->is_dir = 1;
-            else
-                n->is_dir = 0;
-            n->next = NULL;
+            list_alloc(&n,f , st);
             find_dir(n,s1,names);
         }
         free(dir_2);
     }
-    closedir(FD);
+    closedir(options.fd);
 }
 
 void find_dir(s_list *n, s_list **s1, s_list **names)
@@ -69,21 +97,19 @@ void find_dir(s_list *n, s_list **s1, s_list **names)
     }
 }
 
-int recursive_dir (char *dirname)
+int recursive_dir (char *dirname, s_opt options)
 {
     s_list *names = NULL;
     s_list *s1;
     s_list *tmp_list = NULL;
     char *new_root;
+    names = put_in_list(dirname,&new_root,options);
+    action_dir_pre(dirname,names);//am schimbat merge cu action dir
 
-    names = put_in_list(dirname,&new_root);
-  //  s1 = names;
-   // tmp_list = s1;
     merge_sort(&names);
-    //free(tmp_list);
-    s1 = names;
-
-    display_list(s1);
+   // s1 = names;
+    s1=names;
+    display_list(s1,options,new_root);
      while (s1)
      {
        char *tmp_dir;
@@ -94,8 +120,7 @@ int recursive_dir (char *dirname)
          tmp_dir = dirtemp;
          dirtemp=ft_strjoin(new_root,(char*)s1->name);
          free(tmp_dir);
-         action_dir_pre(new_root,s1->name);
-         recursive_dir(dirtemp);
+         recursive_dir(dirtemp,options);
          free(dirtemp);
        }
        s1= s1->next;
