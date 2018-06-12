@@ -108,7 +108,12 @@ void read_dir(s_list **s1, s_list **names, s_opt options,char * dirname)
     char *new_dir;
     char *dir_2;
 
-    while ((f = readdir(options.fd)) != NULL) {
+    if (options.fd == 0){
+        printf("%s\n", dirname);
+        printf("permission denied\n");
+    }
+    else {
+        while ((f = readdir(options.fd)) != NULL) {
         new_dir=ft_strdup(dirname);
         dir_2 = new_dir;
         if (options.opt_a == 1 || f->d_name[0] != '.') {
@@ -121,7 +126,7 @@ void read_dir(s_list **s1, s_list **names, s_opt options,char * dirname)
         }
         free(dir_2);
     }
-    closedir(options.fd);
+    closedir(options.fd);}
 }
 
 void find_dir(s_list *n, s_list **s1, s_list **names)
@@ -152,7 +157,7 @@ void recursive_call(s_list *s1, char* new_root, s_opt options)
             if (options.opt_R == 1) {
                 if ((dirtemp[ft_strlen(dirtemp) - 2] != '.' && dirtemp[ft_strlen(dirtemp) - 1] != '.') ||
                     dirtemp[ft_strlen(dirtemp) - 1] != '.') {
-                    ft_putchar('\n');
+                    //ft_putchar('\n');
                     recursive_dir(dirtemp, options);
                 }
             }

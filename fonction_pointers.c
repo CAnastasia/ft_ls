@@ -17,19 +17,13 @@ char * str_to_lower(char *str)
 int compare_alphabetic(s_list *first, s_list * second)
 {
     int ret;
-    char * first_name;
-    char * second_name;
 
-    first_name = str_to_lower(first->name);
-    second_name = str_to_lower(second->name);
 
     ret = 0;
-    if (ft_strcmp(first_name,second_name) < 0)
+    if (ft_strcmp(first->name,second->name) < 0)
     {
         ret = 1;
     }
-    ft_strdel(&first_name);
-    ft_strdel(&second_name);
     return (ret);
 }
 
@@ -49,18 +43,12 @@ int compare_time(s_list *first, s_list * second)
 int compare_alphabetic_reverse(s_list *first, s_list * second)
 {
     int ret;
-    char * first_name;
-    char * second_name;
 
-    first_name = str_to_lower(first->name);
-    second_name = str_to_lower(second->name);
     ret = 0;
-    if (ft_strcmp(first_name,second_name) > 0)
+    if (ft_strcmp(first->name,second->name) > 0)
     {
         ret = 1;
     }
-    ft_strdel(&first_name);
-    ft_strdel(&second_name);
     return (ret);
 }
 

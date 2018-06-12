@@ -37,13 +37,13 @@ s_list *put_in_list(char * filename, char **new_root, s_opt options)
     if (NULL == (*new_root = malloc((ft_strlen(filename) + 2))))
         exit(EXIT_FAILURE);
     memcpy(*new_root,filename,ft_strlen(filename));
-    if ((*new_root)[ft_strlen(filename) - 1] != '/')
-    {
+ //   if ((*new_root)[ft_strlen(filename) - 1] != '/')
+   // {
         (*new_root)[ft_strlen(filename)] = '/';
         (*new_root)[ft_strlen(filename) + 1] = '\0';
-    }
-    else
-        (*new_root)[ft_strlen(filename)] = '\0';
+    //}
+    //else
+      //  (*new_root)[ft_strlen(filename)] = '\0';
     if(open_dir_list(&second_tmp, filename, new_root, &options))
     {
         free(*new_root);

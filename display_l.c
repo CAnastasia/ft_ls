@@ -2,16 +2,15 @@
 
 void file_g_u_id(s_stat file_stat, s_opt options)
 {
-    /*struct group *grp;
-    struct passwd *pwd;
-*/
     options.pwd = getpwuid(file_stat.st_uid);
+    printf("pwd : %s\n",options.pwd->pw_name);
     print_string(options.pwd->pw_name, options.space_uid);
     ft_putchar(' ');
     options.grp = getgrgid(file_stat.st_gid);
     print_string(options.grp->gr_name, options.space_gid);
     ft_putchar(' ');
 }
+
 void display_color(char* directory)
 {
     s_stat file_stat;
@@ -31,6 +30,7 @@ void display_color(char* directory)
     if(S_ISDIR(file_stat.st_mode))
         write(1,"\033[0;36m",7);
 }
+
 void display_file_name(char *filename, char *directory)
 {
     s_stat file_stat;
