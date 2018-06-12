@@ -2,16 +2,17 @@
 int verif_opt(char *arg,char comp_char)
 {
     int ret;
-    ret = 0;
 
+    ret = 0;
     if(ft_strchr(arg, comp_char) != NULL)
         ret = 1;
     return (ret);
 }
 void options(s_opt *option,char ** arg)
 {
-    int i = 0;
-    char begin_opt = '-';
+    int i;
+
+    i = 0;
     while (arg[i])
     {
         if (verif_opt(arg[i],'-'))
@@ -20,6 +21,12 @@ void options(s_opt *option,char ** arg)
                 option->opt_a = 1;
             if (verif_opt(arg[i],'l'))
                 option->opt_l = 1;
+            if (verif_opt(arg[i],'R'))
+                option->opt_R = 1;
+            if (verif_opt(arg[i],'r'))
+                option->opt_r = 1;
+            if (verif_opt(arg[i],'t'))
+                option->opt_t = 1;
         }
         i++;
     }
@@ -27,22 +34,40 @@ void options(s_opt *option,char ** arg)
 }
 int main(int argc, char **argv)
 {
-    int i = 1;
+    int i;
+    int k;
+    int m;
+    int n;
+
+    i = 1;
+    k = 0;
+    m = 0;
     s_opt opt = {.opt_a = 0,.opt_l = 0, .opt_R = 0, .opt_r = 0, .opt_t = 0};
+
     options(&opt,argv);
     while (argv[i])
     {
-        if(verif_opt(argv[i],'-') == 0)
+        while(argv[i][k])
         {
-            int n = recursive_dir(argv[i],opt);
+            if (argv[i][k] == '-')
+            {
+                m++;
+            }
+            k++;
+        }
+        if(m>1)
+        {
+            write(1,"usage",5);
+            exit(1);
+        }
+        m=0;
+        if(verif_opt(argv[i],'-') == 0 || ft_strlen(argv[i]) == 1)
+        {
+            n = recursive_dir(argv[i],opt);
+            if (i != argc - 1 || argc == 2)
+                ft_putchar('\n');
         }
         i++;
     }
-//file_info(argv[1]);
-  //action_dir_pre(test,"");
-
-         //s_list *for_time = put_in_list(test,&francais);
-          //display_list(for_time);
-      //    get_time(for_time);
   return (0);
 }

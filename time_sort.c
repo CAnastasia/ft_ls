@@ -40,7 +40,7 @@ void front_back_split(s_list *source, s_list **front,s_list **back)
     *back = slow->next;
     slow->next = NULL;
 }
-void merge_sort(s_list **list)
+void merge_sort(s_list **list, s_opt options)
 {
     s_list *tmp;
     s_list *first;
@@ -50,7 +50,15 @@ void merge_sort(s_list **list)
     if ((tmp == NULL) || (tmp->next == NULL))
         return;
     front_back_split(tmp, &first, &second);
-    merge_sort(&first);
-    merge_sort(&second);
-    *list = sorted_lists(first, second,compare_alphabetic_reverse);
+    merge_sort(&first, options);
+    merge_sort(&second, options);
+
+    if (options.opt_t && !options.opt_r)
+        *list = sorted_lists(first, second,compare_time);
+    else if (options.opt_t && options.opt_r)
+        *list = sorted_lists(first, second, compare_time_reverse);
+    else if (options.opt_r)
+        *list = sorted_lists(first, second,compare_alphabetic_reverse);
+    else
+        *list = sorted_lists(first, second,compare_alphabetic);
 }

@@ -1,16 +1,35 @@
 #include "ft_ls.h"
 
-void file_g_u_id(s_stat file_stat)
+void file_g_u_id(s_stat file_stat, s_opt options)
 {
-    struct group *grp;
+    /*struct group *grp;
     struct passwd *pwd;
+*/
+    options.pwd = getpwuid(file_stat.st_uid);
+    print_string(options.pwd->pw_name, options.space_uid);
+    ft_putchar(' ');
+    options.grp = getgrgid(file_stat.st_gid);
+    print_string(options.grp->gr_name, options.space_gid);
+    ft_putchar(' ');
+}
+void display_color(char* directory)
+{
+    s_stat file_stat;
 
-    pwd = getpwuid(file_stat.st_uid);
-    ft_putstr(pwd->pw_name);
-    ft_putchar(' ');
-    grp = getgrgid(file_stat.st_gid);
-    ft_putstr(grp->gr_name);
-    ft_putchar(' ');
+    if(lstat(directory, &file_stat) < 0)
+        return;
+    if(S_ISLNK(file_stat.st_mode))
+        write(1,"\033[1;34m",7);
+    if(S_ISFIFO(file_stat.st_mode))
+        write(1,"\033[0;33m",7);
+    if(S_ISBLK(file_stat.st_mode))
+        write(1,"\033[0;32m",7);
+    if(S_ISCHR(file_stat.st_mode))
+        write(1,"\033[0;31m",7);
+    if(S_ISSOCK(file_stat.st_mode))
+        write(1,"\033[0;35m",7);
+    if(S_ISDIR(file_stat.st_mode))
+        write(1,"\033[0;36m",7);
 }
 void display_file_name(char *filename, char *directory)
 {
@@ -19,7 +38,9 @@ void display_file_name(char *filename, char *directory)
     ssize_t len;
     if(lstat(directory, &file_stat) < 0)
         return;
+    display_color(directory);
     ft_putstr(filename);
+    write(1,"\033[0m",4);
     if(S_ISLNK(file_stat.st_mode))
     {
         ft_putstr(" -> ");
@@ -29,7 +50,8 @@ void display_file_name(char *filename, char *directory)
     }
     ft_putchar('\n');
 }
-void major_minor(s_stat file_stat)
+
+void major_minor(s_stat file_stat, s_opt options)
 {
     int dev;
 
@@ -41,30 +63,62 @@ void major_minor(s_stat file_stat)
     }
     else
     {
-        ft_putnbr(file_stat.st_size);
+        print_int(file_stat.st_size, options.space_size);
     }
 }
-void file_info(char *file_name,char *directory)
+void display_year(s_stat file_stat)
+{
+    char tmp[5];
+
+    ft_memcpy(tmp,ctime(&(file_stat.st_mtime)) + 4,4);
+    tmp[4]='\0';
+    ft_putstr(tmp);
+    ft_putchar(' ');
+    ft_putchar(' ');
+    ft_memcpy(tmp,ctime(&(file_stat.st_mtime)) + 8, 3);
+    tmp[3] = '\0';
+    ft_putstr(tmp);
+    ft_memcpy(tmp,ctime(&(file_stat.st_mtime)) + 20, 4);
+    tmp[4] = '\0';
+    ft_putstr(tmp);
+}
+void time_info(s_stat file_stat)
+{
+    char tmp[9];
+    time_t seconds;
+
+    seconds = time(NULL);
+    if ((seconds - 15778463) < file_stat.st_mtime || seconds < file_stat.st_mtime)
+    {
+        ft_memcpy(tmp,ctime(&(file_stat.st_mtime)) + 4,4);
+        tmp[4]='\0';
+        ft_putstr(tmp);
+        ft_putchar(' ');
+        ft_putchar(' ');
+        ft_memcpy(tmp,ctime(&(file_stat.st_mtime)) + 8, 8);
+        tmp[8]='\0';
+        ft_putstr(tmp);
+    }
+    else
+    {
+       display_year(file_stat);
+    }
+}
+
+void file_info(char *file_name,char *directory, s_opt options)
 {
     s_stat file_stat;
-    char tmp[9];
 
     if(lstat(directory, &file_stat) < 0)
         return;
     file_permissions(file_stat);
     ft_putchar(' ');
-    ft_putnbr(file_stat.st_nlink);
+    print_int(file_stat.st_nlink, options.space_link);
     ft_putchar(' ');
-    file_g_u_id(file_stat);
-    major_minor(file_stat);
+    file_g_u_id(file_stat, options);
+    major_minor(file_stat, options);
     ft_putchar(' ');
-    ft_memcpy(tmp,ctime(&(file_stat.st_mtime))+4,4);
-    tmp[4]='\0';
-    ft_putstr(tmp);
-    ft_putchar(' ');
-    ft_putchar(' ');
-    ft_memcpy(tmp,ctime(&(file_stat.st_mtime))+8,8);
-    ft_putstr(tmp);
+    time_info(file_stat);
     ft_putchar(' ');
     display_file_name(file_name,directory);
 }
