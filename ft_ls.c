@@ -10,16 +10,42 @@ int verif_opt(char *arg,char comp_char)
         ret = 1;
     return (ret);
 }
+void check_opt(int *i, char **argv)
+{
+    int j = 1;
+
+    while(argv[*i][j])
+    {
+            if ((argv[*i][j] != 'l' && argv[*i][j] != 'R' && argv[*i][j] != 'r' &&
+                 argv[*i][j] != 't' && argv[*i][j] != 'a'))
+            {
+                write(1, "./ft_ls: illegal option -- ", 27);
+                write (1, &argv[*i][j], 1);
+                write (1, "\n", 1);
+                write(1, "usage: ./ft_ls [-Rrtarg] [file...]", 34);
+                write (1, "\n", 1);
+                exit(1);
+            }
+
+        j++;
+    }
+    j = 0;
+}
+
 
 void options(s_opt *option,char ** arg)
 {
     int i;
+    s_stat st;
 
-    i = 0;
+    i = 1;
     while (arg[i])
     {
+        if(arg[i][0] != '-')
+          break;
         if (verif_opt(arg[i],'-'))
         {
+            check_opt(&i, arg);
             if (verif_opt(arg[i],'a'))
                 option->opt_a = 1;
             if (verif_opt(arg[i],'l'))
@@ -33,7 +59,16 @@ void options(s_opt *option,char ** arg)
         }
         i++;
     }
-
+    while(arg[i])
+    {
+       if(lstat(arg[i], &st) < 0)
+       {
+          write(1,"no such file or directory ",26);
+          write(1, arg[i], ft_strlen(arg[i]));
+        //  write(1, "\n", 1);
+        }
+       i++;
+    }
 }
 
 void    error_opt(char **argv)
@@ -65,28 +100,7 @@ void    error_opt(char **argv)
 
 }
 
-void check_opt(int *i, char **argv)
-{
-    int j = 1;
 
-    while(argv[*i][j])
-    {
-
-            if ((argv[*i][j] != 'l' && argv[*i][j] != 'R' && argv[*i][j] != 'r' &&
-                 argv[*i][j] != 't' && argv[*i][j] != 'a'))
-            {
-                write(1, "./ft_ls: illegal option -- ", 27);
-                write (1, &argv[*i][j], 1);
-                write (1, "\n", 1);
-                write(1, "usage: ./ft_ls [-Rrtarg] [file...]", 34);
-                write (1, "\n", 1);
-                exit(1);
-            }
-
-        j++;
-    }
-    j = 0;
-}
 int main(int argc, char **argv)
 {
     int i;
@@ -100,16 +114,12 @@ int main(int argc, char **argv)
     error_opt(argv);
     while (argv[i])
     {
-        //
-       // check_opt(&i, argv);
         if(verif_opt(argv[i],'-') == 0 || ft_strlen(argv[i]) == 1 )
         {
-           // count++;
             n = recursive_dir(argv[i],opt);
             if (i != argc - 1 || argc == 2)
                 ft_putchar('\n');
         }
-       // check_opt(&i, argv);
         i++;
     }
   return (0);

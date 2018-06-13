@@ -8,9 +8,9 @@ int open_dir_list(s_list **second_tmp, char* filename, char** new_root, s_opt * 
     {
         if(lstat(filename,&st) < 0)
         {
-            write(1, "ft_ls: '", 9);
+          /*  write(1, "ft_ls: '", 9);
             write(1, *new_root, ft_strlen(*new_root));
-            write(1, "': No such file or directory", 28);
+            write(1, "': No such file or directory", 28);*/
             return(1);
         }
         if (S_ISREG(st.st_mode) || S_ISCHR(st.st_mode) || S_ISFIFO(st.st_mode) || S_ISBLK(st.st_mode) ||
@@ -50,6 +50,7 @@ s_list *put_in_list(char * filename, char **new_root, s_opt options)
         return second_tmp;
     }
     tmp_list = second_tmp;
+
     read_dir(&tmp_list,&second_tmp,options,*new_root);
     tmp_list = second_tmp;
     return (tmp_list);

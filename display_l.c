@@ -3,7 +3,6 @@
 void file_g_u_id(s_stat file_stat, s_opt options)
 {
     options.pwd = getpwuid(file_stat.st_uid);
-    printf("pwd : %s\n",options.pwd->pw_name);
     print_string(options.pwd->pw_name, options.space_uid);
     ft_putchar(' ');
     options.grp = getgrgid(file_stat.st_gid);
@@ -140,5 +139,3 @@ void file_permissions(s_stat file_stat)
     ft_putstr( (file_stat.st_mode & S_IWOTH) ? "w" : "-");
     ft_putstr( (file_stat.st_mode & S_IXOTH) ? "x" : "-");
 }
-
-

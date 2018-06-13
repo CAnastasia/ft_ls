@@ -109,7 +109,7 @@ void read_dir(s_list **s1, s_list **names, s_opt options,char * dirname)
     char *dir_2;
 
     if (options.fd == 0){
-        printf("%s\n", dirname);
+        printf("%s", dirname);
         printf("permission denied\n");
     }
     else {
@@ -157,7 +157,7 @@ void recursive_call(s_list *s1, char* new_root, s_opt options)
             if (options.opt_R == 1) {
                 if ((dirtemp[ft_strlen(dirtemp) - 2] != '.' && dirtemp[ft_strlen(dirtemp) - 1] != '.') ||
                     dirtemp[ft_strlen(dirtemp) - 1] != '.') {
-                    //ft_putchar('\n');
+                    ft_putchar('\n');
                     recursive_dir(dirtemp, options);
                 }
             }
@@ -173,9 +173,11 @@ int recursive_dir(char *dirname, s_opt options)
     s_list *s1;
     s_list *tmp_list = NULL;
     char *new_root;
-
-    if((names = put_in_list(dirname,&new_root,options)) == NULL)
-        return (1);
+    if(((names = put_in_list(dirname,&new_root,options)) == NULL) && ((options.fd = opendir(dirname)) == NULL))
+    {
+      return (1);
+    }
+    closedir(options.fd);
     merge_sort(&names, options);
     s1 = names;
     action_dir_pre(dirname,s1, &options);
