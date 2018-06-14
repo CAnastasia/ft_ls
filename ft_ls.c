@@ -106,7 +106,7 @@ int main(int argc, char **argv)
     int i;
     int n;
     s_opt opt;
-    int count = 0;
+    char *argv_opt;
 
     i = 1;
     opt = (s_opt) {.opt_a = 0,.opt_l = 0, .opt_R = 0, .opt_r = 0, .opt_t = 0};
@@ -114,13 +114,19 @@ int main(int argc, char **argv)
     error_opt(argv);
     while (argv[i])
     {
+       // argv_opt = ft_strdup(argv[i]);
         if(verif_opt(argv[i],'-') == 0 || ft_strlen(argv[i]) == 1 )
         {
             n = recursive_dir(argv[i],opt);
-            if (i != argc - 1 || argc == 2)
-                ft_putchar('\n');
+            /*if (i != argc - 1 || argc == 2)
+                ft_putchar('\n');*/
         }
         i++;
     }
+   // sleep(150);
+   /* if (verif_opt(argv[argc - 1],'-') != 0 && argv[argc] == NULL)
+        argv_opt = ft_strdup(".");
+    if (!argv[argc])
+        n = recursive_dir(argv_opt,opt);*/
   return (0);
 }

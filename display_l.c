@@ -2,11 +2,15 @@
 
 void file_g_u_id(s_stat file_stat, s_opt options)
 {
-    options.pwd = getpwuid(file_stat.st_uid);
-    print_string(options.pwd->pw_name, options.space_uid);
+    if ((options.pwd = getpwuid(file_stat.st_uid)) == NULL)
+        print_string(ft_itoa(file_stat.st_uid), options.space_gid);
+    else
+        print_string(options.pwd->pw_name, options.space_uid);
     ft_putchar(' ');
-    options.grp = getgrgid(file_stat.st_gid);
-    print_string(options.grp->gr_name, options.space_gid);
+    if ((options.grp = getgrgid(file_stat.st_gid)) == NULL)
+        print_string(ft_itoa(file_stat.st_gid), options.space_gid);
+    else
+        print_string(options.grp->gr_name, options.space_gid);
     ft_putchar(' ');
 }
 
@@ -54,8 +58,8 @@ void major_minor(s_stat file_stat, s_opt options)
 {
     int dev;
 
-    if(S_ISBLK(file_stat.st_mode) ||  S_ISCHR(file_stat.st_mode)) {
-        dev= file_stat.st_rdev >> 8;
+    if(file_stat.st_rdev && (S_ISBLK(file_stat.st_mode) ||  S_ISCHR(file_stat.st_mode))) {
+        dev = file_stat.st_rdev >> 24;
         ft_putnbr((unsigned int)dev & (0b0000000011111111));
         ft_putstr(", ");
         ft_putnbr((unsigned int)file_stat.st_rdev & (0b0000000011111111));
@@ -107,7 +111,6 @@ void time_info(s_stat file_stat)
 void file_info(char *file_name,char *directory, s_opt options)
 {
     s_stat file_stat;
-
     if(lstat(directory, &file_stat) < 0)
         return;
     file_permissions(file_stat);
@@ -115,6 +118,7 @@ void file_info(char *file_name,char *directory, s_opt options)
     print_int(file_stat.st_nlink, options.space_link);
     ft_putchar(' ');
     file_g_u_id(file_stat, options);
+    //printf("%lld\n",file_stat.st_size);
     major_minor(file_stat, options);
     ft_putchar(' ');
     time_info(file_stat);

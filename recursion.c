@@ -24,7 +24,7 @@ void function_total(char *root, s_list * s1)
         tempo = ft_strjoin(root_copy,s1->name);
         stat(tempo,&st);
         free(tempo);
-        size += st.st_blocks/2;
+        size += st.st_blocks;
         s1 = s1->next;
     }
     free(new_root);
@@ -42,12 +42,12 @@ void print_int(int size, int space)
    i = 0;
    str_itoa = ft_itoa(size);
    size_str = ft_strlen(str_itoa);
-   while (i < space-size_str)
+   while (i < space - size_str)
    {
        ft_putchar(' ');
        i++;
    }
-   ft_putnbr(size);
+    ft_putnbr(size);
    free(str_itoa);
 }
 
@@ -84,7 +84,7 @@ void action_file(s_list *file)
     display_color(file->name);
     write(1,file->name,ft_strlen(file->name));
     write(1,"\033[0m",4);
-    write(1,"\n",1);
+    //write(1,"\n",1);
 }
 
 void list_alloc(s_list **n, d_dir *f, s_stat st)
@@ -126,7 +126,10 @@ void read_dir(s_list **s1, s_list **names, s_opt options,char * dirname)
         }
         free(dir_2);
     }
-    closedir(options.fd);}
+        if (options.fd != NULL)
+            closedir(options.fd);
+    }
+
 }
 
 void find_dir(s_list *n, s_list **s1, s_list **names)
@@ -175,9 +178,10 @@ int recursive_dir(char *dirname, s_opt options)
     char *new_root;
     if(((names = put_in_list(dirname,&new_root,options)) == NULL) && ((options.fd = opendir(dirname)) == NULL))
     {
-      return (1);
+        return (1);
     }
-    closedir(options.fd);
+    if (options.fd != NULL)
+        closedir(options.fd);
     merge_sort(&names, options);
     s1 = names;
     action_dir_pre(dirname,s1, &options);

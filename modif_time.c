@@ -21,7 +21,7 @@ int open_dir_list(s_list **second_tmp, char* filename, char** new_root, s_opt * 
             (*second_tmp)->name = filename;
             (options->opt_l == 1 ? file_info((*second_tmp)->name,filename, *options) : action_file(*second_tmp));
             free(*second_tmp);
-            *second_tmp=NULL;
+            *second_tmp = NULL;
             return(1);
         }
     }
@@ -32,6 +32,7 @@ s_list *put_in_list(char * filename, char **new_root, s_opt options)
 {
     s_list *tmp_list;
     s_list *second_tmp;
+
 
     second_tmp = NULL;
     if (NULL == (*new_root = malloc((ft_strlen(filename) + 2))))
@@ -50,7 +51,6 @@ s_list *put_in_list(char * filename, char **new_root, s_opt options)
         return second_tmp;
     }
     tmp_list = second_tmp;
-
     read_dir(&tmp_list,&second_tmp,options,*new_root);
     tmp_list = second_tmp;
     return (tmp_list);
