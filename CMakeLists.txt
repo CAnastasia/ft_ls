@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.9)
-project(ls_mac)
+project(ls_fin)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(ls_mac
+add_executable(ls_fin
         libft/ft_atoi.c
         libft/ft_bzero.c
         libft/ft_isalnum.c

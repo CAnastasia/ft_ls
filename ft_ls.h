@@ -22,6 +22,8 @@ typedef struct dirent d_dir;
 
 typedef struct opt_t
 {
+    char **argv_name;
+    int size_argv;
     DIR *fd;
     int space_link;
     int space_size;
@@ -65,11 +67,10 @@ void file_permissions(s_stat file_stat);
 void file_info(char *file_name, char *directory, s_opt options);
 void file_g_u_id(s_stat file_stat, s_opt options);
 void max_nr(char *root,s_list * s1, s_opt *options);
-void print_int(int size, int space);
+void print_int(long size, int space);
 void print_string(char * str, int space);
 void max_gid_uid(char *root, s_list * s1,s_opt *options);
 void display_color(char* directory);
-
-
+void	ft_putnbr_long(long n);
 
 #endif

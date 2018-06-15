@@ -33,7 +33,7 @@ void function_total(char *root, s_list * s1)
     ft_putchar('\n');
 }
 
-void print_int(int size, int space)
+void print_int(long size, int space)
 {
    int i;
    int size_str;
@@ -47,7 +47,12 @@ void print_int(int size, int space)
        ft_putchar(' ');
        i++;
    }
-    ft_putnbr(size);
+    if (size == 2147483648)
+    {
+        ft_putnbr_long(size);
+    }
+    else
+        ft_putnbr(size);
    free(str_itoa);
 }
 
@@ -65,16 +70,30 @@ void print_string(char * str, int space)
         i++;
     }
 }
-
+int check_same_name(char *root , s_opt * options)
+{
+    int i;
+    int j = 0;
+    i = 0;
+    while (i < options->size_argv)
+    {
+        if (ft_strcmp(options->argv_name[i], root))
+        {
+            j = 1;
+        }
+        i++;
+    }
+    return (j);
+}
 void action_dir_pre(char *root,s_list * s1, s_opt * options)
 {
-    //printf("%s\n", );
-  //  if (options->opt_l == 1 || ft_strcmp(root,"."))
-    //{
-      ft_putstr(root);
-      ft_putchar(':');
-      ft_putchar('\n');
-    //}
+
+    if (check_same_name(root, options))
+    {
+        ft_putstr(root);
+        ft_putchar(':');
+        ft_putchar('\n');
+    }
     if (options->opt_l) {
         if (s1 != NULL)
           function_total(root, s1);
@@ -167,6 +186,7 @@ void recursive_call(s_list *s1, char* new_root, s_opt options)
                     dirtemp[ft_strlen(dirtemp) - 1] != '.') {
                     ft_putchar('\n');
                     recursive_dir(dirtemp, options);
+
                 }
             }
             free(dirtemp);
@@ -177,9 +197,14 @@ void recursive_call(s_list *s1, char* new_root, s_opt options)
 
 int recursive_dir(char *dirname, s_opt options)
 {
-    s_list *names = NULL;
+    s_list *names;
     s_list *s1;
-    s_list *tmp_list = NULL;
+    s_list *tmp_list;
+    int i;
+
+    names = NULL;
+    i = 0;
+    tmp_list= NULL;
     char *new_root;
     if(((names = put_in_list(dirname,&new_root,options)) == NULL) && ((options.fd = opendir(dirname)) == NULL))
         return (1);

@@ -3,9 +3,11 @@
 int open_dir_list(s_list **second_tmp, char* filename, char** new_root, s_opt * options)
 {
     s_stat st;
+    int i = 0;
 
     if(NULL == (options->fd = opendir(*new_root)))
     {
+
         if(lstat(filename,&st) < 0)
         {
           /*  write(1, "ft_ls: '", 9);
@@ -33,7 +35,6 @@ s_list *put_in_list(char * filename, char **new_root, s_opt options)
     s_list *tmp_list;
     s_list *second_tmp;
 
-
     second_tmp = NULL;
     if (NULL == (*new_root = malloc((ft_strlen(filename) + 2))))
         exit(EXIT_FAILURE);
@@ -45,6 +46,7 @@ s_list *put_in_list(char * filename, char **new_root, s_opt options)
     //}
     //else
       //  (*new_root)[ft_strlen(filename)] = '\0';
+
     if(open_dir_list(&second_tmp, filename, new_root, &options))
     {
         free(*new_root);

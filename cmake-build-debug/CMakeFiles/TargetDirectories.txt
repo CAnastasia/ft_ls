@@ -1,3 +1,3 @@
-/Users/canastas/ls_mac/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/canastas/ls_mac/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/canastas/ls_mac/cmake-build-debug/CMakeFiles/ls_mac.dir
+/Users/canastas/ls_fin/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/canastas/ls_fin/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/canastas/ls_fin/cmake-build-debug/CMakeFiles/ls_fin.dir

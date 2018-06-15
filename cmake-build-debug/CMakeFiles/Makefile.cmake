@@ -121,5 +121,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/ls_mac.dir/DependInfo.cmake"
+  "CMakeFiles/ls_fin.dir/DependInfo.cmake"
   )

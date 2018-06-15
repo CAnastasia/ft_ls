@@ -54,45 +54,45 @@ RM = /Applications/CLion.app/Contents/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/canastas/ls_mac
+CMAKE_SOURCE_DIR = /Users/canastas/ls_fin
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/canastas/ls_mac/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/canastas/ls_fin/cmake-build-debug
 
 #=============================================================================
-# Target rules for target CMakeFiles/ls_mac.dir
+# Target rules for target CMakeFiles/ls_fin.dir
 
 # All Build rule for target.
-CMakeFiles/ls_mac.dir/all:
-	$(MAKE) -f CMakeFiles/ls_mac.dir/build.make CMakeFiles/ls_mac.dir/depend
-	$(MAKE) -f CMakeFiles/ls_mac.dir/build.make CMakeFiles/ls_mac.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/canastas/ls_mac/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71 "Built target ls_mac"
-.PHONY : CMakeFiles/ls_mac.dir/all
+CMakeFiles/ls_fin.dir/all:
+	$(MAKE) -f CMakeFiles/ls_fin.dir/build.make CMakeFiles/ls_fin.dir/depend
+	$(MAKE) -f CMakeFiles/ls_fin.dir/build.make CMakeFiles/ls_fin.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/canastas/ls_fin/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71 "Built target ls_fin"
+.PHONY : CMakeFiles/ls_fin.dir/all
 
 # Include target in all.
-all: CMakeFiles/ls_mac.dir/all
+all: CMakeFiles/ls_fin.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/ls_mac.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/canastas/ls_mac/cmake-build-debug/CMakeFiles 71
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ls_mac.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/canastas/ls_mac/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/ls_mac.dir/rule
+CMakeFiles/ls_fin.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/canastas/ls_fin/cmake-build-debug/CMakeFiles 71
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ls_fin.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/canastas/ls_fin/cmake-build-debug/CMakeFiles 0
+.PHONY : CMakeFiles/ls_fin.dir/rule
 
 # Convenience name for target.
-ls_mac: CMakeFiles/ls_mac.dir/rule
+ls_fin: CMakeFiles/ls_fin.dir/rule
 
-.PHONY : ls_mac
-
-# clean rule for target.
-CMakeFiles/ls_mac.dir/clean:
-	$(MAKE) -f CMakeFiles/ls_mac.dir/build.make CMakeFiles/ls_mac.dir/clean
-.PHONY : CMakeFiles/ls_mac.dir/clean
+.PHONY : ls_fin
 
 # clean rule for target.
-clean: CMakeFiles/ls_mac.dir/clean
+CMakeFiles/ls_fin.dir/clean:
+	$(MAKE) -f CMakeFiles/ls_fin.dir/build.make CMakeFiles/ls_fin.dir/clean
+.PHONY : CMakeFiles/ls_fin.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/ls_fin.dir/clean
 
 .PHONY : clean
 
