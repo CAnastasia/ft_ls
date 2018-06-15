@@ -13,6 +13,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include "libft/libft.h"
+# include <errno.h>
 
 
 typedef struct stat s_stat;

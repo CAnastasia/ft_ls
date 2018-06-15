@@ -68,12 +68,16 @@ void print_string(char * str, int space)
 
 void action_dir_pre(char *root,s_list * s1, s_opt * options)
 {
-
-    ft_putstr(root);
-    ft_putchar(':');
-    ft_putchar('\n');
+    //printf("%s\n", );
+  //  if (options->opt_l == 1 || ft_strcmp(root,"."))
+    //{
+      ft_putstr(root);
+      ft_putchar(':');
+      ft_putchar('\n');
+    //}
     if (options->opt_l) {
-        function_total(root, s1);
+        if (s1 != NULL)
+          function_total(root, s1);
         max_nr(root, s1, options);
         max_gid_uid(root, s1, options);
     }
@@ -108,16 +112,19 @@ void read_dir(s_list **s1, s_list **names, s_opt options,char * dirname)
     char *new_dir;
     char *dir_2;
 
-    if (options.fd == 0){
+    if (options.fd == NULL){
+        if (errno == EACCES)
+        {
         printf("%s", dirname);
         printf("permission denied\n");
+        }
+        free(dirname);
     }
     else {
         while ((f = readdir(options.fd)) != NULL) {
         new_dir=ft_strdup(dirname);
         dir_2 = new_dir;
         if (options.opt_a == 1 || f->d_name[0] != '.') {
-
             new_dir=ft_strjoin(new_dir,f->d_name);
             lstat(new_dir, &st);
             free(new_dir);
@@ -126,10 +133,8 @@ void read_dir(s_list **s1, s_list **names, s_opt options,char * dirname)
         }
         free(dir_2);
     }
-        if (options.fd != NULL)
-            closedir(options.fd);
+    closedir(options.fd);
     }
-
 }
 
 void find_dir(s_list *n, s_list **s1, s_list **names)
@@ -177,9 +182,7 @@ int recursive_dir(char *dirname, s_opt options)
     s_list *tmp_list = NULL;
     char *new_root;
     if(((names = put_in_list(dirname,&new_root,options)) == NULL) && ((options.fd = opendir(dirname)) == NULL))
-    {
         return (1);
-    }
     if (options.fd != NULL)
         closedir(options.fd);
     merge_sort(&names, options);

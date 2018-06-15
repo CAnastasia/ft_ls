@@ -37,6 +37,7 @@ void options(s_opt *option,char ** arg)
 {
     int i;
     s_stat st;
+    int opt = 0;
 
     i = 1;
     while (arg[i])
@@ -99,34 +100,52 @@ void    error_opt(char **argv)
     }
 
 }
+int count_argv(char **argv)
+{
+  int i;
+  int count;
 
-
+  i = 1;
+  count = 0;
+  while(argv[i])
+  {
+    if(verif_opt(argv[i],'-') == 0)
+      count++;
+    i++;
+  }
+  return (count);
+}
 int main(int argc, char **argv)
 {
     int i;
     int n;
     s_opt opt;
     char *argv_opt;
+    int h =0;
 
-    i = 1;
+    i = 0;
     opt = (s_opt) {.opt_a = 0,.opt_l = 0, .opt_R = 0, .opt_r = 0, .opt_t = 0};
     options(&opt,argv);
     error_opt(argv);
-    while (argv[i])
+    while (i < argc)
     {
-       // argv_opt = ft_strdup(argv[i]);
-        if(verif_opt(argv[i],'-') == 0 || ft_strlen(argv[i]) == 1 )
+        i++;
+        if (i == argc && h == 1)
+          break;
+        if((!argv[i] || verif_opt(argv[i],'-') == 0) && count_argv(argv) == 0)
+        {
+          argv_opt = ft_strdup(".");
+          n = recursive_dir(argv_opt,opt);
+          free(argv_opt);
+        }
+        else if(verif_opt(argv[i],'-') == 0 || ft_strlen(argv[i]) == 1)
         {
             n = recursive_dir(argv[i],opt);
+            h = 1;
+
             /*if (i != argc - 1 || argc == 2)
                 ft_putchar('\n');*/
         }
-        i++;
     }
-   // sleep(150);
-   /* if (verif_opt(argv[argc - 1],'-') != 0 && argv[argc] == NULL)
-        argv_opt = ft_strdup(".");
-    if (!argv[argc])
-        n = recursive_dir(argv_opt,opt);*/
   return (0);
 }
