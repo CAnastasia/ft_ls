@@ -3,25 +3,21 @@
 int open_dir_list(s_list **second_tmp, char* filename, char** new_root, s_opt * options)
 {
     s_stat st;
-    int i = 0;
+    int i;
 
+    i = 0;
     if(NULL == (options->fd = opendir(*new_root)))
     {
 
         if(lstat(filename,&st) < 0)
-        {
-          /*  write(1, "ft_ls: '", 9);
-            write(1, *new_root, ft_strlen(*new_root));
-            write(1, "': No such file or directory", 28);*/
             return(1);
-        }
         if (S_ISREG(st.st_mode) || S_ISCHR(st.st_mode) || S_ISFIFO(st.st_mode) || S_ISBLK(st.st_mode) ||
             S_ISLNK(st.st_mode) || S_ISSOCK(st.st_mode))
         {
             if (NULL == (*second_tmp = malloc((sizeof **second_tmp))))
                 exit(EXIT_FAILURE);
             (*second_tmp)->name = filename;
-            (options->opt_l == 1 ? file_info((*second_tmp)->name,filename, *options) : action_file(*second_tmp));
+            (options->opt_l == 1 ? file_info((*second_tmp)->name,filename, *options) : action_file(*second_tmp, *options));
             free(*second_tmp);
             *second_tmp = NULL;
             return(1);
@@ -39,14 +35,8 @@ s_list *put_in_list(char * filename, char **new_root, s_opt options)
     if (NULL == (*new_root = malloc((ft_strlen(filename) + 2))))
         exit(EXIT_FAILURE);
     memcpy(*new_root,filename,ft_strlen(filename));
- //   if ((*new_root)[ft_strlen(filename) - 1] != '/')
-   // {
-        (*new_root)[ft_strlen(filename)] = '/';
-        (*new_root)[ft_strlen(filename) + 1] = '\0';
-    //}
-    //else
-      //  (*new_root)[ft_strlen(filename)] = '\0';
-
+    (*new_root)[ft_strlen(filename)] = '/';
+    (*new_root)[ft_strlen(filename) + 1] = '\0';
     if(open_dir_list(&second_tmp, filename, new_root, &options))
     {
         free(*new_root);

@@ -13,7 +13,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include "libft/libft.h"
-# include <errno.h>
+#include <errno.h>
 
 
 typedef struct stat s_stat;
@@ -23,6 +23,8 @@ typedef struct dirent d_dir;
 typedef struct opt_t
 {
     char **argv_name;
+    char **argv_files;
+    int size_files;
     int size_argv;
     DIR *fd;
     int space_link;
@@ -50,7 +52,7 @@ typedef struct slist_t
 void read_dir(s_list **s1, s_list **names, s_opt options, char * dirname);
 void actions_dir(s_list  *dir);
 void action_dir_pre(char *root,s_list *s1, s_opt *options);
-void action_file(s_list  *file);
+void action_file(s_list  *file, s_opt opt);
 int recursive_dir (char *dirname, s_opt options);
 void find_dir(s_list *n, s_list **s1, s_list **names);
 void get_time(s_list * list);

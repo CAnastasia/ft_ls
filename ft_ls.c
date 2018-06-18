@@ -85,9 +85,11 @@ void options(s_opt *option,char ** arg)
     {
        if(lstat(arg[i], &st) < 0)
        {
-          write(1,"no such file or directory ",26);
+          write(1, "ft_ls: ", 7);
           write(1, arg[i], ft_strlen(arg[i]));
-        //  write(1, "\n", 1);
+          write(1, ": ", 2);
+          write(1,"No such file or directory ",26);
+          write(1, "\n", 1);
         }
        i++;
     }
@@ -121,46 +123,74 @@ void    error_opt(char **argv)
     }
 
 }
-int count_argv(char **argv)
+int count_file(int argc, char **argv)
 {
   int i;
-    int j;
+  s_stat st;
   int count;
 
   i = 1;
   count = 0;
-  while(argv[i])
+  while(i < argc)
   {
-
-    if(argv[i][0] != '-')
+    if (lstat(argv[i], &st) == 0)
     {
-        count++;
+        if(!S_ISDIR(st.st_mode))
+        {
+            count++;
+        }
     }
     i++;
   }
     return (count);
 }
-char **argv_string(int argc, char **argv)
+
+int count_dir(int argc, char **argv)
+{
+  int i;
+  s_stat st;
+  int count;
+
+  i = 1;
+  count = 0;
+  while(i < argc)
+  {
+    if (lstat(argv[i], &st) == 0)
+    {
+        if(S_ISDIR(st.st_mode))
+        {
+            count++;
+        }
+    }
+    i++;
+  }
+   return (count);
+}
+char **argv_file(int argc, char **argv, int size)
 {
     int i;
     int j;
-    int size;
     char **copy_argv;
+     s_stat st;
+
 
     i = 1;
     j = 0;
-    size =  count_argv(argv);
     if (!(copy_argv = (char**)malloc(sizeof(*copy_argv) * size)))
         return (NULL);
     while(i < argc)
     {
-        if(argv[i][0] != '-')
+        if (lstat(argv[i], &st) == 0)
         {
-            if (j < size)
+            if(!S_ISDIR(st.st_mode))
             {
-                copy_argv[j] = ft_strdup(argv[i]);
-                j++;
 
+                if (j < size)
+                {
+                    copy_argv[j] = ft_strdup(argv[i]);
+                    j++;
+
+                }
             }
         }
         i++;
@@ -168,72 +198,155 @@ char **argv_string(int argc, char **argv)
     }
     return (copy_argv);
 }
-char **sort_argv(int argc, char **argv, s_opt opt)
+char **argv_folder(int argc, char **argv, int size)
 {
-    char **argv_to_sort;
+    int i;
+    int j;
+    char **copy_argv;
+     s_stat st;
+
+
+    i = 1;
+    j = 0;
+    if (!(copy_argv = (char**)malloc(sizeof(*copy_argv) * size)))
+        return (NULL);
+    while(i < argc)
+    {
+        if(lstat(argv[i], &st) == 0)
+        {
+            if(S_ISDIR(st.st_mode))
+            {
+                if (j < size)
+                {
+                    copy_argv[j] = ft_strdup(argv[i]);
+                    j++;
+
+                }
+            }
+        }
+        i++;
+
+    }
+    return (copy_argv);
+}
+
+char    **sort_argv(char **str, int size)
+{
     char *temp;
-    char **ret_str;
     int  i;
     int j;
-    argv_to_sort = argv_string(argc, argv);
-    i = 0;
+    char**argv_to_sort;
 
-    while(i < opt.size_argv)
+    argv_to_sort = str;
+    i = 0;
+    while(i < size)
     {
         j = i + 1;
-        while(j < opt.size_argv)
+        while(j < size)
         {
-            if (strcmp(argv_to_sort[i], argv_to_sort[j]) > 0)
+            if (ft_strcmp(argv_to_sort[i], argv_to_sort[j]) > 0)
             {
+
                 temp = ft_strdup(argv_to_sort[i]);
                 argv_to_sort[i] = ft_strdup(argv_to_sort[j]);
                 argv_to_sort[j] = ft_strdup(temp);
+                free(temp);
             }
             j++;
         }
         i++;
     }
-    return argv_to_sort;
+    return(argv_to_sort);
 }
-
-int main(int argc, char **argv)
+int call_files(char**file_names, int size, s_opt opt)
 {
     int i;
-    int n;
-    s_opt opt;
-    char *argv_opt;
-    int h =0;
-    int p = 0;
+    int r;
 
     i = 0;
-    opt = (s_opt) {.opt_a = 0,.opt_l = 0, .opt_R = 0, .opt_r = 0, .opt_t = 0};
-    options(&opt,argv);
-    error_opt(argv);
-    p =  count_argv(argv);
-    opt.size_argv = count_argv(argv);
-    opt.argv_name = sort_argv(argc, argv, opt);
-    while (i < argc)
-    {
-
+     while(i  <  opt.size_files)
+     {
+        r = recursive_dir(file_names[i],opt);
+        if (i == size - 1)
+            ft_putchar('\n');
+        else if(opt.opt_l == 0)
+            ft_putchar(' ');
         i++;
-        if (i == argc && h > 1)
-          break;
-        if((!argv[i] || verif_opt(argv[i],'-') == 0) && count_argv(argv) == 0)
+     }
+}
+void call_folders(char **folder_names, int size, s_opt opt)
+{
+    int i;
+    int r;
+
+    i = 0;
+    while(i  <  size)
+    {
+        r = recursive_dir(folder_names[i],opt);
+        if (i < size - 1)
+            ft_putchar('\n');
+        i++;
+    }
+}
+void free_argv(char ***folder, char ***files, s_opt *opt)
+{
+int i = 0;
+     if (opt->size_argv > 0)
+     {
+        while(i < opt->size_argv)
         {
-          argv_opt = ft_strdup(".");
-          n = recursive_dir(argv_opt,opt);
-          free(argv_opt);
-        }
-        else if(verif_opt(argv[i],'-') == 0 || ft_strlen(argv[i]) == 1)
-        {
-            printf("h: %d\n", h);
-            n = recursive_dir(opt.argv_name[h],opt);
-            h++;
-            p--;
-            if (p)
-                ft_putchar('\n');
+            free(*folder[i]);
+           // free(opt->argv_name[i]);
+            i++;
         }
 
-    }
-  return (0);
+     }
+     i =  0;
+     if (opt->size_files > 0)
+     {
+        while(i < opt->size_files)
+        {
+           free(files[i]);
+           //free(opt->argv_files[i]);
+           i++;
+        }
+     }
+}
+int main(int argc, char **argv)
+{
+    int n;
+    s_opt opt;
+    char **folders;
+    char **files;
+
+    opt = (s_opt) {.opt_a = 0,.opt_l = 0, .opt_R = 0, .opt_r = 0, .opt_t = 0};
+    error_opt(argv);
+    options(&opt,argv);
+    opt.size_argv = count_dir(argc,argv);
+    opt.size_files = count_file(argc, argv);
+    folders = argv_folder(argc, argv,  opt.size_argv);
+    files = argv_file(argc, argv,  opt.size_files);
+    opt.argv_name = sort_argv(folders,  opt.size_argv);
+    opt.argv_files = sort_argv(files,  opt.size_files);
+    if (opt.size_files == 0 && opt.size_argv == 0)
+        n = recursive_dir(".", opt);
+    call_files(opt.argv_files, opt.size_files, opt);
+    if (opt.size_files > 0 && opt.size_argv > 0)
+        ft_putchar('\n');
+    call_folders(opt.argv_name,  opt.size_argv, opt);
+
+    //free(files);
+  //  ft_strdel(opt.argv_files);
+  int i =0;
+  if (opt.size_files > 0)
+       {
+          while(i < opt.size_files)
+          {
+             free(files[i]);
+             i++;
+          }
+       }
+    //free_argv(&folders, &files, &opt);
+
+    return (0);
 }

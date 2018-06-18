@@ -70,14 +70,21 @@ void print_string(char * str, int space)
         i++;
     }
 }
-int check_same_name(char *root , s_opt * options)
+int check_same_name(char *root , s_opt options)
 {
     int i;
     int j = 0;
     i = 0;
-    while (i < options->size_argv)
+    if (options.size_argv == 0)
     {
-        if (ft_strcmp(options->argv_name[i], root))
+        if (ft_strcmp(".", root))
+            j = 1;
+
+    }
+
+    while (i < options.size_argv)
+    {
+        if (ft_strcmp(options.argv_name[i], root))
         {
             j = 1;
         }
@@ -88,7 +95,7 @@ int check_same_name(char *root , s_opt * options)
 void action_dir_pre(char *root,s_list * s1, s_opt * options)
 {
 
-    if (check_same_name(root, options))
+    if (check_same_name(root, *options) || options->size_files > 0)
     {
         ft_putstr(root);
         ft_putchar(':');
@@ -102,12 +109,11 @@ void action_dir_pre(char *root,s_list * s1, s_opt * options)
     }
 }
 
-void action_file(s_list *file)
+void action_file(s_list *file, s_opt opt)
 {
     display_color(file->name);
     write(1,file->name,ft_strlen(file->name));
     write(1,"\033[0m",4);
-    //write(1,"\n",1);
 }
 
 void list_alloc(s_list **n, d_dir *f, s_stat st)
@@ -227,3 +233,5 @@ int recursive_dir(char *dirname, s_opt options)
     }
     return (0);
 }
+
+
